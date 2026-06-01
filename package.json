@@ -19,13 +19,14 @@
     "next": "14.2.18",
     "next-auth": "^4.24.10",
     "react": "^18",
-    "react-dom": "^18",
-    "react-confetti": "^6.1.0"
+    "react-confetti": "^6.1.0",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.5.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.18",
     "postcss": "^8",

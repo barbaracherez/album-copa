@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary-green: #006633;
+  --color-primary-yellow: #FFD700;
+  --color-accent-orange: #FF6B00;
+  --color-accent-pink: #FF1493;
+  --color-bg-cream: #F5F0E8;
+  --color-gold: #FFB800;
+  --color-white: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-bg-cream);
+  font-family: 'Inter', sans-serif;
+}
+
+.font-bebas {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+/* Shimmer effect for rare stickers */
+.shimmer-rare {
+  background: linear-gradient(
+    90deg,
+    #a78bfa 0%,
+    #818cf8 25%,
+    #c4b5fd 50%,
+    #818cf8 75%,
+    #a78bfa 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+/* Gold glow for gold stickers */
+.glow-gold {
+  box-shadow: 0 0 10px #FFB800, 0 0 20px #FFB800, 0 0 40px #FFB80066;
+  animation: glowGold 2s ease-in-out infinite;
+}
+
+@keyframes glowGold {
+  0%, 100% {
+    box-shadow: 0 0 8px #FFB800, 0 0 16px #FFB800;
+  }
+  50% {
+    box-shadow: 0 0 20px #FFB800, 0 0 40px #FFB800, 0 0 60px #FFB80066;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes cardFlip {
+  0% { transform: rotateY(90deg) scale(0.8); opacity: 0; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes packOpen {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(3deg); }
+  100% { transform: scale(0) rotate(15deg); opacity: 0; }
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.card-flip-animation {
+  animation: cardFlip 0.6s ease-in-out forwards;
+}
+
+/* Sticker slot styles */
+.sticker-slot-empty {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(0, 0, 0, 0.03) 5px,
+    rgba(0, 0, 0, 0.03) 10px
+  );
+}
+
+/* Section colors */
+.section-historia { border-color: #006633; }
+.section-unidades { border-color: #0066CC; }
+.section-diretoria { border-color: #FFB800; }
+.section-areas { border-color: #FF6B00; }
+.section-premios { border-color: #9B59B6; }
+.section-momentos { border-color: #E74C3C; }
+.section-colaboradores { border-color: #27AE60; }
+.section-brasil2026 { border-color: #FFD700; }
+.section-selecao { border-color: #006633; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #006633;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #004d26;
+}

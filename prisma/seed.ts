@@ -1,0 +1,146 @@
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+const stickers = [
+  // Historia (1-10)
+  { number: 1, name: "Fundação Grupo Presença", description: "O início de tudo em 2001", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 2, name: "Primeira Sede", description: "Nosso primeiro escritório no centro de São Paulo", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 3, name: "Primeiros 100 Colaboradores", description: "Marco histórico de crescimento", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 4, name: "Expansão Nacional", description: "Chegamos ao Brasil inteiro", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 5, name: "ISO 9001 Certificação", description: "Qualidade reconhecida internacionalmente", section: "historia", rarity: "rare", dropWeight: 30 },
+  { number: 6, name: "1000 Colaboradores", description: "Uma família que cresce sem parar", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 7, name: "Presença Digital", description: "A transformação digital do grupo", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 8, name: "20 Anos de História", description: "Duas décadas de conquistas", section: "historia", rarity: "rare", dropWeight: 30 },
+  { number: 9, name: "Sustentabilidade", description: "Nosso compromisso com o futuro", section: "historia", rarity: "normal", dropWeight: 100 },
+  { number: 10, name: "Visão 2030", description: "O futuro começa agora", section: "historia", rarity: "gold", dropWeight: 10 },
+
+  // Unidades (11-14) — unidades reais do Grupo Presença
+  { number: 11, name: "Presença Promotora – República", description: "Nossa sede histórica no coração de São Paulo, onde tudo começou", section: "unidades", rarity: "normal", dropWeight: 100 },
+  { number: 12, name: "Presença – Vila Olímpia", description: "O hub de inovação do grupo, no coração financeiro de SP", section: "unidades", rarity: "rare", dropWeight: 30 },
+  { number: 13, name: "Filial Presença – Mogi das Cruzes", description: "Expandindo nossa presença no ABC e Alto Tietê", section: "unidades", rarity: "normal", dropWeight: 100 },
+  { number: 14, name: "Filial Presença – Divisópolis", description: "Nossa chegada ao interior de Minas Gerais", section: "unidades", rarity: "normal", dropWeight: 100 },
+
+  // Diretoria (23-28) - ALL GOLD
+  { number: 23, name: "Diretor Presidente", description: "Liderança e visão estratégica", section: "diretoria", rarity: "gold", dropWeight: 10 },
+  { number: 24, name: "Diretor Financeiro", description: "Gestão financeira de excelência", section: "diretoria", rarity: "gold", dropWeight: 10 },
+  { number: 25, name: "Diretora de RH", description: "Pessoas são nossa maior riqueza", section: "diretoria", rarity: "gold", dropWeight: 10 },
+  { number: 26, name: "Diretor Comercial", description: "Crescimento e novos mercados", section: "diretoria", rarity: "gold", dropWeight: 10 },
+  { number: 27, name: "Diretora de Operações", description: "Eficiência operacional máxima", section: "diretoria", rarity: "gold", dropWeight: 10 },
+  { number: 28, name: "Diretor de TI", description: "Tecnologia como diferencial", section: "diretoria", rarity: "gold", dropWeight: 10 },
+
+  // Areas (29-58) - 3 stickers each for 10 departments
+  { number: 29, name: "RH Talentos", description: "Recrutamento e seleção de estrelas", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 30, name: "RH Desenvolvimento", description: "Crescimento contínuo de pessoas", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 31, name: "RH Benefícios", description: "Cuidando de quem faz acontecer", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  { number: 32, name: "Financeiro Contábil", description: "Números que contam histórias", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 33, name: "Financeiro Controladoria", description: "Controle e planejamento", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 34, name: "Financeiro Tesouraria", description: "Fluxo de caixa impecável", section: "areas", rarity: "normal", dropWeight: 100 },
+
+  { number: 35, name: "Jurídico Contratos", description: "Segurança em cada acordo", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 36, name: "Jurídico Trabalhista", description: "Relações saudáveis de trabalho", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 37, name: "Jurídico Tributário", description: "Expertise tributária de ponta", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  { number: 38, name: "Compliance & Ética", description: "Integridade acima de tudo", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 39, name: "Compliance Auditoria", description: "Transparência em cada processo", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 40, name: "Compliance LGPD", description: "Proteção de dados no DNA", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  { number: 41, name: "Comercial Inside Sales", description: "Vendas de alta performance", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 42, name: "Comercial Grandes Contas", description: "Relacionamentos que valem ouro", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 43, name: "Comercial Customer Success", description: "Clientes felizes, empresa feliz", section: "areas", rarity: "normal", dropWeight: 100 },
+
+  { number: 44, name: "TI Infraestrutura", description: "A base sólida do digital", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 45, name: "TI Desenvolvimento", description: "Código que transforma vidas", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 46, name: "Presença Tech", description: "Inovação que vai além", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  { number: 47, name: "Marketing Digital", description: "Presença online que impacta", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 48, name: "Marketing Conteúdo", description: "Histórias que engajam", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 49, name: "Marketing Branding", description: "A marca que todos reconhecem", section: "areas", rarity: "normal", dropWeight: 100 },
+
+  { number: 50, name: "Operações Processos", description: "Excelência em cada etapa", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 51, name: "Operações Qualidade", description: "Zero tolerância com mediocridade", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 52, name: "Operações Melhoria Contínua", description: "Kaizen no sangue", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  { number: 53, name: "Logística Distribuição", description: "Entrega no prazo sempre", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 54, name: "Logística Armazenagem", description: "Organização que facilita tudo", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 55, name: "Logística Última Milha", description: "Do armazém ao cliente final", section: "areas", rarity: "normal", dropWeight: 100 },
+
+  { number: 56, name: "Atendimento SAC", description: "Voz do cliente, coração do negócio", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 57, name: "Atendimento Omnichannel", description: "Em todos os canais, sempre", section: "areas", rarity: "normal", dropWeight: 100 },
+  { number: 58, name: "Atendimento NPS Campeão", description: "9.8 de satisfação - Top Brasil!", section: "areas", rarity: "rare", dropWeight: 30 },
+
+  // Premios (59-68)
+  { number: 59, name: "GPTW 2022", description: "Great Place to Work - Certificação", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 60, name: "GPTW 2023", description: "Revalidação da excelência", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 61, name: "GPTW 2024", description: "Três anos consecutivos!", section: "premios", rarity: "gold", dropWeight: 10 },
+  { number: 62, name: "Prêmio Reclame Aqui", description: "RA1000 - Melhor empresa", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 63, name: "Top 10 Inovação", description: "Revista Exame PME - 2023", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 64, name: "Empresa do Ano", description: "AMCHAM São Paulo 2024", section: "premios", rarity: "gold", dropWeight: 10 },
+  { number: 65, name: "Selo ESG Ouro", description: "Responsabilidade socioambiental", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 66, name: "Prêmio Melhor Lugar para Trabalhar", description: "Categoria Serviços - Brasil", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 67, name: "Top Employer Brasil", description: "Reconhecimento nacional", section: "premios", rarity: "rare", dropWeight: 30 },
+  { number: 68, name: "Forbes Under 30 Presença", description: "CEO reconhecido globalmente", section: "premios", rarity: "gold", dropWeight: 10 },
+
+  // Momentos (69-80)
+  { number: 69, name: "Confraternização 2025", description: "A festa que todo mundo fala até hoje", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 70, name: "Inauguração Vila Olímpia", description: "O novo lar da inovação", section: "momentos", rarity: "rare", dropWeight: 30 },
+  { number: 71, name: "Início Presença Tech", description: "O dia que mudou tudo", section: "momentos", rarity: "rare", dropWeight: 30 },
+  { number: 72, name: "Copa Presença 2024", description: "Torneio interno de futebol épico", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 73, name: "Hackathon 2024", description: "48h de pura criatividade", section: "momentos", rarity: "rare", dropWeight: 30 },
+  { number: 74, name: "Dia da Família 2025", description: "Trazer quem amamos ao trabalho", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 75, name: "Voluntariado em Ação", description: "Juntos transformamos vidas", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 76, name: "Viagem de Incentivo Miami", description: "Top performers voando alto", section: "momentos", rarity: "rare", dropWeight: 30 },
+  { number: 77, name: "1ª Formatura Jovem Aprendiz", description: "Futuros líderes do grupo", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 78, name: "Aniversário 23 anos", description: "Celebrando cada conquista", section: "momentos", rarity: "normal", dropWeight: 100 },
+  { number: 79, name: "Summit Liderança 2025", description: "Visão, estratégia e futuro", section: "momentos", rarity: "rare", dropWeight: 30 },
+  { number: 80, name: "Parceria FIFA Licensed", description: "O grupo vai à Copa!", section: "momentos", rarity: "gold", dropWeight: 10 },
+
+  // Colaboradores (81-90)
+  { number: 81, name: "Colaborador 10 Anos", description: "Uma década de dedicação", section: "colaboradores", rarity: "normal", dropWeight: 100 },
+  { number: 82, name: "Campeão de Vendas", description: "Resultado que inspira todos", section: "colaboradores", rarity: "rare", dropWeight: 30 },
+  { number: 83, name: "Inova Presença", description: "A ideia que virou produto", section: "colaboradores", rarity: "rare", dropWeight: 30 },
+  { number: 84, name: "Voluntário do Ano", description: "Coração que serve", section: "colaboradores", rarity: "normal", dropWeight: 100 },
+  { number: 85, name: "Mentoria em Ação", description: "Lider que forma líderes", section: "colaboradores", rarity: "gold", dropWeight: 15 },
+  { number: 86, name: "Jovem Liderança", description: "O futuro já chegou", section: "colaboradores", rarity: "normal", dropWeight: 100 },
+  { number: 87, name: "Embaixador da Cultura", description: "DNA Presença no sangue", section: "colaboradores", rarity: "normal", dropWeight: 100 },
+  { number: 88, name: "Top Performer Anual", description: "Excelência que se repete", section: "colaboradores", rarity: "gold", dropWeight: 15 },
+  { number: 89, name: "Inovador do Trimestre", description: "Ideias que mudam processos", section: "colaboradores", rarity: "rare", dropWeight: 30 },
+  { number: 90, name: "Colaborador Destaque Copa", description: "O melhor do melhor!", section: "colaboradores", rarity: "gold", dropWeight: 15 },
+
+  // Brasil 2026 (91-96) - RARE
+  { number: 91, name: "Sede Copa Brasil 2026", description: "O Brasil recebe o mundo", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+  { number: 92, name: "Estádio Maracanã", description: "A catedral do futebol", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+  { number: 93, name: "Estádio Neo Química Arena", description: "A casa do timão", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+  { number: 94, name: "Estádio Mineirão", description: "A força de Minas", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+  { number: 95, name: "Mascote Copa 2026", description: "O símbolo desta Copa", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+  { number: 96, name: "Brasil Hexacampeão?", description: "A esperança de uma nação", section: "brasil2026", rarity: "rare", dropWeight: 30 },
+
+  // Seleção Presença (97-100) - GOLD
+  { number: 97, name: "Capitão Presença", description: "Lidera pelo exemplo", section: "selecao", rarity: "gold", dropWeight: 10 },
+  { number: 98, name: "Artilheiro Presença", description: "Gol em cada desafio", section: "selecao", rarity: "gold", dropWeight: 10 },
+  { number: 99, name: "Goleiro Presença", description: "Defende os valores do grupo", section: "selecao", rarity: "gold", dropWeight: 10 },
+  { number: 100, name: "MVP Copa Presença 2026", description: "A carta mais rara do álbum!", section: "selecao", rarity: "gold", dropWeight: 5 },
+];
+
+async function main() {
+  console.log("Seeding stickers...");
+  for (const sticker of stickers) {
+    await prisma.sticker.upsert({
+      where: { number: sticker.number },
+      update: sticker,
+      create: sticker,
+    });
+  }
+  console.log(`Seeded ${stickers.length} stickers`);
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
