@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  role          String    @default("user")
+  lastPackAt    DateTime?
+  createdAt     DateTime  @default(now())
+
+  userStickers   UserSticker[]
+  posts          Post[]
+  comments       Comment[]
+  likes          Like[]
+  tradesSent     Trade[]   @relation("TradeFrom")
+  tradesReceived Trade[]   @relation("TradeTo")
+  sessions       Session[]
+  accounts       Account[]
+}
+
+model Sticker {
+  id          String  @id @default(cuid())
+  number      Int     @unique
+  name        String
+  description String?
+  imageUrl    String?
+  section     String
+  rarity      String  @default("normal")
+  dropWeight  Int     @default(100)
+
+  userStickers    UserSticker[]
+  offeredInTrades Trade[]       @relation("OfferedSticker")
+  wantedInTrades  Trade[]       @relation("WantedSticker")
+}
+
+model UserSticker {
+  id            String   @id @default(cuid())
+  userId        String
+  stickerId     String
+  quantity      Int      @default(1)
+  placedInAlbum Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  sticker Sticker @relation(fields: [stickerId], references: [id])
+
+  @@unique([userId, stickerId])
+}
+
+model Trade {
+  id               String   @id @default(cuid())
+  fromUserId       String
+  toUserId         String?
+  offeredStickerId String
+  wantedStickerId  String?
+  status           String   @default("open")
+  message          String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  fromUser       User     @relation("TradeFrom", fields: [fromUserId], references: [id])
+  toUser         User?    @relation("TradeTo", fields: [toUserId], references: [id])
+  offeredSticker Sticker  @relation("OfferedSticker", fields: [offeredStickerId], references: [id])
+  wantedSticker  Sticker? @relation("WantedSticker", fields: [wantedStickerId], references: [id])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  type      String   @default("general")
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id     String @id @default(cuid())
+  postId String
+  userId String
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
