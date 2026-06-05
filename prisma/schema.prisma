@@ -1,17 +1,18 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
-  image         String?   @db.Text
+  image         String?  
   role          String    @default("user")
   lastPackAt    DateTime?
   createdAt     DateTime  @default(now())
@@ -30,8 +31,8 @@ model Sticker {
   id          String  @id @default(cuid())
   number      Int     @unique
   name        String
-  description String? @db.Text
-  imageUrl    String? @db.Text
+  description String?
+  imageUrl    String?
   section     String
   rarity      String  @default("normal")
   dropWeight  Int     @default(100)
@@ -62,7 +63,7 @@ model Trade {
   offeredStickerId String
   wantedStickerId  String?
   status           String   @default("open")
-  message          String?  @db.Text
+  message          String? 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -75,9 +76,9 @@ model Trade {
 model Post {
   id        String   @id @default(cuid())
   userId    String
-  content   String   @db.Text
+  content   String  
   type      String   @default("general")
-  metadata  String?  @db.Text
+  metadata  String? 
   createdAt DateTime @default(now())
 
   user     User      @relation(fields: [userId], references: [id])
@@ -89,7 +90,7 @@ model Comment {
   id        String   @id @default(cuid())
   postId    String
   userId    String
-  content   String   @db.Text
+  content   String  
   createdAt DateTime @default(now())
 
   post Post @relation(fields: [postId], references: [id])
@@ -113,12 +114,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
